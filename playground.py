@@ -1,0 +1,78 @@
+from collections import Counter
+
+letcount = Counter()
+
+with open('words_alpha.txt') as f:
+    for line in f.readlines():
+        for c in line.rstrip():
+            letcount[c] += 1
+
+for x in range(ord('a'), ord('z')+1):
+    c = chr(x)
+    print(c, letcount[c])
+
+"""
+letter counts, ordered alphabetically
+
+a 295792
+b 63940
+c 152981
+d 113190
+e 376454
+f 39238
+g 82627
+h 92368
+i 313008
+j 5456
+k 26814
+l 194914
+m 105208
+n 251436
+o 251596
+p 113663
+q 5883
+r 246142
+s 250284
+t 230895
+u 131496
+v 33075
+w 22407
+x 10493
+y 70580
+z 14757
+"""
+
+print()
+for pair in sorted(letcount.most_common(26), key=lambda pair: pair[1]):
+    print(pair[0], pair[1], round(100.0 * pair[1] / sum(p[1] for p in letcount.most_common(26)), 2))
+
+"""
+letter counts, ordered by frequency, with percentages. With manually added letter scores.
+
+j 5456 0.16     9
+q 5883 0.17     9
+x 10493 0.3     8
+z 14757 0.42    8
+w 22407 0.64    7
+k 26814 0.77    7
+v 33075 0.95    6
+f 39238 1.12    6
+b 63940 1.83    5
+y 70580 2.02    5
+g 82627 2.36    5
+h 92368 2.64    5
+m 105208 3.01   4
+d 113190 3.24   4
+p 113663 3.25   4
+u 131496 3.76   4
+c 152981 4.38   4
+l 194914 5.58   3
+t 230895 6.61   2
+r 246142 7.04   2
+s 250284 7.16   2
+n 251436 7.19   2
+o 251596 7.2    2
+a 295792 8.46   1
+i 313008 8.96   1
+e 376454 10.77  1
+"""
