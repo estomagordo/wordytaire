@@ -76,3 +76,32 @@ a 295792 8.46   1
 i 313008 8.96   1
 e 376454 10.77  1
 """
+
+
+def rules(y, x):
+    dy, dx = abs(y)%5, abs(x)%5
+
+    if abs(dy) == abs(dx) and dy%2:
+        if dy in (1, 4):
+            return (1, 2)
+        return (1, 3)
+
+    if abs(dy-dx) in (2,3) and dy > dx and not dy%2:
+        return (abs(dy-dx), 1)
+
+    return (1, 1)
+
+
+def symb(val):
+    if val == (1, 3):
+        return 'W3'
+    if val == (1, 2):
+        return 'W2'
+    if val == (3, 1):
+        return 'L3'
+    if val == (2, 1):
+        return 'L2'
+    return '  '
+
+for y in range(-15, 16):
+    print(' '.join(symb(rules(x, y)) for x in range(-15, 16)))
