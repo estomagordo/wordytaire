@@ -105,3 +105,37 @@ def symb(val):
 
 for y in range(-15, 16):
     print(' '.join(symb(rules(x, y)) for x in range(-15, 16)))
+
+
+def score_submission(submission):
+    used = {}
+    letters = Counter()
+
+    letters['a'] = 846
+    letters['b'] = 183
+    letters['c'] = 438
+    letters['d'] = 324
+    letters['e'] = 1078
+    letters['f'] = 112
+    letters['g'] = 236
+    letters['h'] = 264
+    letters['i'] = 896
+    letters['j'] = 16
+    letters['k'] = 77
+    letters['l'] = 558
+    letters['m'] = 301
+    letters['n'] = 719
+    letters['o'] = 720
+    letters['p'] = 325
+    letters['q'] = 17
+    letters['r'] = 704
+    letters['s'] = 716
+    letters['t'] = 661
+    letters['u'] = 376
+    letters['v'] = 95
+    letters['w'] = 64
+    letters['x'] = 30
+    letters['y'] = 202
+    letters['z'] = 42
+
+    score = 0
