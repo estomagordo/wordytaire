@@ -107,6 +107,42 @@ for y in range(-15, 16):
     print(' '.join(symb(rules(x, y)) for x in range(-15, 16)))
 
 
+def validate(used, letters, parts):
+    if len(parts) != 5:
+        return (f'Error', -1, {})
+
+    if not all(parts[x].isdigit() for x in range(4)):
+        return (f'Error', -2, {})
+
+    if not all(c in 'abcdefghijklmnopqrstuvwxyz' for c in parts[4]):
+        return (f'Error', -3, {})
+
+    x1, y1, x2, y2 = map(int, parts[:4])
+    word = parts[4]
+    n = len(word)
+    
+    if not (x2 > x1 and y2 == y1) or (x2 == x1 and y2 > y1):
+        return (f'Error', -4, {})
+
+    if not (x2-x1 == n-1 or y2-y1 == n-1):
+        return (f'Error', -5, {})
+
+    wordletters = Counter(word)
+
+    if wordletters - letters:
+        return (f'Error', -6, {})
+
+    placement = {(x1+i, y1) : word[i] for i in range(n)] if x1 != x2 else [(x1, y1+i, word[i]) for i in range(n)]}
+
+    if any((p[0], p[1]) in used for p in placement):
+        return (f'Error', -7, {})
+
+    if not used and not (0 in (x1, y1, x2, y2) or x1 < 0 < x2 or y1 < 0 < y2):
+        return (f'Error', -8, {})
+
+    
+
+
 def score_submission(submission):
     used = {}
     letters = Counter()
@@ -139,3 +175,17 @@ def score_submission(submission):
     letters['z'] = 42
 
     score = 0
+
+    for i, line in enumerate(submission):
+        parts = line.split()
+
+        if not parts:
+            continue
+
+        message, valscore, newused = validate(used, letters, parts)
+
+        if valscore < 0:
+            return message, valscore
+
+        
+
