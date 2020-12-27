@@ -45,6 +45,13 @@ def test_float():
     assert(-2 == score)
 
 
+
+def test_lone_minus():
+    s = '1 2 - 5 blacksmith'    
+    _, score, _ = validate_and_score({}, {}, Counter(), s.split())
+    assert(-2 == score)
+
+
 def test_upper():
     s = '0 0 0 0 abcDEF'  
     _, score, _ = validate_and_score({}, {}, Counter(), s.split())

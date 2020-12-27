@@ -41,7 +41,7 @@ def validate_and_score(dictionary, used, letters, parts):
     if len(parts) != 5:
         return (f'Error', -1, {})
 
-    if any(re.search('[^-0-9]', part) for part in parts[:4]):
+    if not all(re.search('^-?\\d+$', part) for part in parts[:4]):
         return (f'Error', -2, {})
 
     if not all(c in 'abcdefghijklmnopqrstuvwxyz' for c in parts[4]):
