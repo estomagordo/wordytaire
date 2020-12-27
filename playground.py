@@ -107,7 +107,15 @@ for y in range(-15, 16):
     print(' '.join(symb(rules(x, y)) for x in range(-15, 16)))
 
 
-def validate(used, letters, parts):
+def get_connected_words(used, placement):
+    pass
+
+
+def score_move(placement, connected_words):
+    pass
+
+
+def validate(dictionary, used, letters, parts):
     if len(parts) != 5:
         return (f'Error', -1, {})
 
@@ -131,19 +139,33 @@ def validate(used, letters, parts):
 
     if wordletters - letters:
         return (f'Error', -6, {})
-
-    placement = {(x1+i, y1) : word[i] for i in range(n)] if x1 != x2 else [(x1, y1+i, word[i]) for i in range(n)]}
+    
+    placement = {(x1+i, y1) : word[i] for i in range(n)} if x1 != x2 else {(x1, y1+i, word[i]) for i in range(n)}
 
     if any((p[0], p[1]) in used for p in placement):
         return (f'Error', -7, {})
 
-    if not used and not (0 in (x1, y1, x2, y2) or x1 < 0 < x2 or y1 < 0 < y2):
+    if word not in dictionary:
         return (f'Error', -8, {})
 
-    
+    if not used and not (0 in (x1, y1, x2, y2) or x1 < 0 < x2 or y1 < 0 < y2):
+        return (f'Error', -9, {})
+
+    connected_words = get_connected_words(used, placement)
+
+    for word in connected_words:
+        if ''.join(c for c in word[0]) not in dictionary:
+            return (f'Error', -10, {})
+
+    move_score = score_move(placement, connected_words)
+
+    for k,v in placement.items():
+        used[k] = v
+
+    return ('', move_score, used)
 
 
-def score_submission(submission):
+def score_submission(dictionary, submission):
     used = {}
     letters = Counter()
 
@@ -182,10 +204,11 @@ def score_submission(submission):
         if not parts:
             continue
 
-        message, valscore, newused = validate(used, letters, parts)
+        message, valscore, used = validate(dictionary, used, letters, parts)
 
         if valscore < 0:
-            return message, valscore
+            return (message, valscore)
 
-        
+        score += valscore
 
+    return ('', score)
