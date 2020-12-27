@@ -1,5 +1,7 @@
 from collections import Counter
 
+import re
+
 
 def rules(y, x):
     dy, dx = abs(y)%5, abs(x)%5
@@ -39,7 +41,7 @@ def validate_and_score(dictionary, used, letters, parts):
     if len(parts) != 5:
         return (f'Error', -1, {})
 
-    if not all(parts[x].isdigit() for x in range(4)):
+    if any(re.search('[^-0-9]', part) for part in parts[:4]):
         return (f'Error', -2, {})
 
     if not all(c in 'abcdefghijklmnopqrstuvwxyz' for c in parts[4]):
