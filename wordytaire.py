@@ -25,7 +25,7 @@ def symb(val):
     if val == (2, 1):
         return 'L2'
     return '  '
-    
+
 
 def get_connected_words(used, placement):
     pass
@@ -35,7 +35,7 @@ def score_move(placement, connected_words):
     pass
 
 
-def validate(dictionary, used, letters, parts):
+def validate_and_score(dictionary, used, letters, parts):
     if len(parts) != 5:
         return (f'Error', -1, {})
 
