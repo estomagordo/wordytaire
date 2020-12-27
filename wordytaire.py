@@ -51,7 +51,7 @@ def validate_and_score(dictionary, used, letters, parts):
     word = parts[4]
     n = len(word)
     
-    if not (x2 > x1 and y2 == y1) or (x2 == x1 and y2 > y1):
+    if not ((x2 > x1 and y2 == y1) or (x2 == x1 and y2 > y1)):
         return (f'Error', -4, {})
 
     if not (x2-x1 == n-1 or y2-y1 == n-1):

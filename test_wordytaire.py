@@ -86,3 +86,15 @@ def test_diagonal():
     s = '1 1 3 3 sausage'  
     _, score, _ = validate_and_score({}, {}, Counter(), s.split())
     assert(-4 == score)
+
+
+def test_short_word():
+    s = '1 1 1 3 up'  
+    _, score, _ = validate_and_score({}, {}, Counter(), s.split())
+    assert(-5 == score)
+
+
+def test_long_word():
+    s = '1 1 1 3 upend'  
+    _, score, _ = validate_and_score({}, {}, Counter(), s.split())
+    assert(-5 == score)
