@@ -18,18 +18,6 @@ def tile_value(tile):
     return (1, 1)
 
 
-def symb(val):
-    if val == (1, 3):
-        return 'W3'
-    if val == (1, 2):
-        return 'W2'
-    if val == (3, 1):
-        return 'L3'
-    if val == (2, 1):
-        return 'L2'
-    return '  '
-
-
 def get_connected_words(used, placement, x1, y1, x2, y2):
     connected_words = []
     
