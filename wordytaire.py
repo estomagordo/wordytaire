@@ -147,7 +147,7 @@ def validate_and_score(dictionary, used, letters, parts):
     if wordletters - letters:
         return (f'Error', -6, {})
     
-    placement = {(x1+i, y1) : word[i] for i in range(n)} if x1 != x2 else {(x1, y1+i, word[i]) for i in range(n)}
+    placement = {(x1+i, y1) : word[i] for i in range(n)} if x1 != x2 else {(x1, y1+i): word[i] for i in range(n)}
 
     if any((p[0], p[1]) in used for p in placement):
         return (f'Error', -7, {})

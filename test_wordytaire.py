@@ -129,3 +129,13 @@ def test_false_start():
     letters = Counter('burn')
     _, score, _ = validate_and_score(dictionary, {}, letters, s.split())
     assert(-9 == score)
+
+
+def test_make_illegal_words():
+    s0 = '0 1 0 3 rub'
+    
+    dictionary = {'rubber', 'rub'}
+    used = {(-2, 0): 'r', (-1, 0): 'u', (0, 0): 'b'}
+    letters = Counter('burn')
+    _, score, _ = validate_and_score(dictionary, used, letters, s0.split())
+    assert(-10 == score)
