@@ -133,9 +133,19 @@ def test_false_start():
 
 def test_make_illegal_words():
     s0 = '0 1 0 3 rub'
+    s1 = '0 -3 0 -1 rub'
+    s2 = '-5 0 -3 0 rub'
+    s3 = '1 0 3 0 rub'
     
     dictionary = {'rubber', 'rub'}
     used = {(-2, 0): 'r', (-1, 0): 'u', (0, 0): 'b'}
     letters = Counter('burn')
-    _, score, _ = validate_and_score(dictionary, used, letters, s0.split())
-    assert(-10 == score)
+    _, score0, _ = validate_and_score(dictionary, used, letters, s0.split())
+    _, score1, _ = validate_and_score(dictionary, used, letters, s1.split())
+    _, score2, _ = validate_and_score(dictionary, used, letters, s2.split())
+    _, score3, _ = validate_and_score(dictionary, used, letters, s3.split())
+    
+    assert(-10 == score0)
+    assert(-10 == score1)
+    assert(-10 == score2)
+    assert(-10 == score3)
