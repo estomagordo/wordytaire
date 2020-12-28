@@ -1,6 +1,6 @@
 from collections import Counter
 
-from wordytaire import tile_value, validate_and_score
+from wordytaire import score_move, tile_value, validate_and_score
 
 
 def test_one_part():
@@ -199,3 +199,9 @@ def test_tile_value():
     assert((1, 2) == w2_2_val)
     assert((1, 3) == w3_0_val)
     assert((1, 3) == w3_1_val)
+
+
+def test_score_openers():
+    opener0 = 
+
+    connected_words = []
