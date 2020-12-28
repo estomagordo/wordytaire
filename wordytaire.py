@@ -29,8 +29,50 @@ def symb(val):
     return '  '
 
 
-def get_connected_words(used, placement):
-    pass
+def get_connected_words(used, placement, x1, y1, x2, y2):
+    connected_words = []
+    
+    if x2 > x1:
+        if (x1-1, y1) in used or (x2+1, y1) in used:
+            extended_start = x1
+            extended_end = x2
+            
+            while (extended_start-1, y1) in used:
+                extended_start -= 1
+
+            while (extended_end+1, y1) in used:
+                extended_end += 1
+
+            extended = []
+
+            for x in range(extended_start, extended_end+1):
+                if (x, y1) in placement:
+                    extended.append([(x, y1), placement[(x, y1)]])
+                else:
+                    extended.append([(x, y1), used[(x, y1)]])
+
+            connected_words.append(extended)
+
+        for x in range(x1, x2+1):
+            if (x, y1-1) in used or (x, y1+1) in used:
+                vertical_start = y1
+                vertical_end = y1
+                
+                while (x, vertical_start-1) in used:
+                    vertical_start -= 1
+
+                while (x, vertical_end+1) in used:
+                    vertical_end += 1
+
+                vertical = []
+
+                for y in range(vertical_start, vertical_end+1):
+                    if (x, y) in placement:
+                        vertical.append([(x, y), placement[(x, y)]])
+                    else:
+                        vertical.append([(x, y), used[(x, y)]])
+
+                connected_words.append(vertical)
 
 
 def score_move(placement, connected_words):
@@ -73,10 +115,10 @@ def validate_and_score(dictionary, used, letters, parts):
     if not used and not (0 in (x1, y1, x2, y2) or x1 < 0 < x2 or y1 < 0 < y2):
         return (f'Error', -9, {})
 
-    connected_words = get_connected_words(used, placement)
+    connected_words = get_connected_words(used, placement, x1, y1, x2, y2)
 
     for word in connected_words:
-        if ''.join(c for c in word[0]) not in dictionary:
+        if ''.join(c[1] for c in word) not in dictionary:
             return (f'Error', -10, {})
 
     move_score = score_move(placement, connected_words)
