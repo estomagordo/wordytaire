@@ -1,6 +1,6 @@
 from collections import Counter
 
-from wordytaire import validate_and_score
+from wordytaire import tile_value, validate_and_score
 
 
 def test_one_part():
@@ -149,3 +149,53 @@ def test_make_illegal_words():
     assert(-10 == score1)
     assert(-10 == score2)
     assert(-10 == score3)
+
+
+def test_tile_value():
+    center = (0, 0)
+    five_col0 = (25, 0)
+    five_col1 = (-120, 0)
+    four_row0 = (7, 9)
+    four_row1 = (7, -124)
+    l2_0 = (7, 0)
+    l2_1 = (-2, -5)
+    l2_2 = (-4, -2)
+    l3_0 = (34, 1)
+    l3_1 = (-804, 1)
+    w2_0 = (1, -1)
+    w2_1 = (-1, -1)
+    w2_2 = (1, -111)
+    w3_0 = (3, 3)
+    w3_1 = (-28, 33)
+
+    center_val = tile_value(center)
+    five_col0_val = tile_value(five_col0)
+    five_col1_val = tile_value(five_col1)
+    four_row0_val = tile_value(four_row0)
+    four_row1_val = tile_value(four_row1)
+    l2_0_val = tile_value(l2_0)
+    l2_1_val = tile_value(l2_1)
+    l2_2_val = tile_value(l2_2)
+    l3_0_val = tile_value(l3_0)
+    l3_1_val = tile_value(l3_1)
+    w2_0_val = tile_value(w2_0)
+    w2_1_val = tile_value(w2_1)
+    w2_2_val = tile_value(w2_2)
+    w3_0_val = tile_value(w3_0)
+    w3_1_val = tile_value(w3_1)
+
+    assert((1, 1) == center_val)
+    assert((1, 1) == five_col0_val)
+    assert((1, 1) == five_col1_val)
+    assert((1, 1) == four_row0_val)
+    assert((1, 1) == four_row1_val)
+    assert((2, 1) == l2_0_val)
+    assert((2, 1) == l2_1_val)
+    assert((2, 1) == l2_2_val)
+    assert((3, 1) == l3_0_val)
+    assert((3, 1) == l3_1_val)
+    assert((1, 2) == w2_0_val)
+    assert((1, 2) == w2_1_val)
+    assert((1, 2) == w2_2_val)
+    assert((1, 3) == w3_0_val)
+    assert((1, 3) == w3_1_val)

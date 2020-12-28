@@ -3,15 +3,16 @@ from collections import Counter
 import re
 
 
-def rules(y, x):
-    dy, dx = abs(y)%5, abs(x)%5
+def tile_value(tile):
+    x, y = tile
+    dx, dy = abs(x)%5, abs(y)%5
 
-    if abs(dy) == abs(dx) and dy%2:
-        if dy in (1, 4):
+    if abs(dy) == abs(dx) and dx%2:
+        if dx in (1, 4):
             return (1, 2)
         return (1, 3)
 
-    if abs(dy-dx) in (2,3) and dy > dx and not dy%2:
+    if abs(dy-dx) in (2,3) and dx > dy and not dx%2:
         return (abs(dy-dx), 1)
 
     return (1, 1)
