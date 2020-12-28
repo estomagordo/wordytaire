@@ -126,7 +126,7 @@ def score_submission(dictionary, submission):
         if not parts:
             continue
 
-        message, valscore, used = validate(dictionary, used, letters, parts)
+        message, valscore, used = validate_and_score(dictionary, used, letters, parts)
 
         if valscore < 0:
             return (message, valscore)
