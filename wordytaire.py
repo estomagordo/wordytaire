@@ -73,6 +73,49 @@ def get_connected_words(used, placement, x1, y1, x2, y2):
                         vertical.append([(x, y), used[(x, y)]])
 
                 connected_words.append(vertical)
+    else:
+        if (x1, y1-1) in used or (x1, y2+1) in used:
+            extended_start = y1
+            extended_end = y2
+            
+            while (x1, extended_start-1) in used:
+                extended_start -= 1
+
+            while (x1, extended_end+1) in used:
+                extended_end += 1
+
+            extended = []
+
+            for y in range(extended_start, extended_end+1):
+                if (x1, y) in placement:
+                    extended.append([(x1, y), placement[(x1, y)]])
+                else:
+                    extended.append([(x1, y), used[(x1, y)]])
+
+            connected_words.append(extended)
+
+        for y in range(y1, y2+1):
+            if (x1-1, y) in used or (x1+1, y) in used:
+                horizontal_start = x1
+                horizontal_end = x1
+                
+                while (horizontal_start-1, y) in used:
+                    horizontal_start -= 1
+
+                while (horizontal_end+1, y) in used:
+                    horizontal_end += 1
+
+                horizontal = []
+
+                for x in range(horizontal_start, horizontal_end+1):
+                    if (x, y) in placement:
+                        horizontal.append([(x, y), placement[(x, y)]])
+                    else:
+                        horizontal.append([(x, y), used[(x, y)]])
+
+                connected_words.append(horizontal)
+
+    return connected_words
 
 
 def score_move(placement, connected_words):
