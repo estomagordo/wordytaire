@@ -26,9 +26,9 @@ def root():
             flash('No selected file')
             return redirect(request.url)
 
-        submission = file.readlines()
+        submission = [line.decode('UTF-8') for line in file.readlines()]
         
-        score = wt.score_submission(submission)
+        score = wt.score_submission(submission)[1]
 
     id_token = request.cookies.get("token")
     error_message = None
