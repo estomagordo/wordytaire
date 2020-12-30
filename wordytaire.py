@@ -118,7 +118,7 @@ def score_placement(placement):
 
 
 def score_connected_word(placement, word):
-    tilevals = sum(letvals[c[1]] * [tile_value(c[0])[0] if c[0] in placement else 1 for c in word])
+    tilevals = sum([letvals[c[1]] * (tile_value(c[0])[0] if c[0] in placement else 1) for c in word])
     multi = reduce(lambda a,b: a*b, [tile_value(c[0])[1] if c[0] in placement else 1 for c in word])
 
     return tilevals * multi

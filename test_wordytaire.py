@@ -241,5 +241,5 @@ def test_score_submission():
     _, illegal_score = score_submission(dictionary, illegal_fifth_word)
     _, legal_score = score_submission(dictionary, fifth_removed)
 
-    assert(-10 == illegal_score)
+    assert(-8 == illegal_score)
     assert(129 == legal_score)
