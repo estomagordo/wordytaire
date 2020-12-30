@@ -1,6 +1,6 @@
 from collections import Counter
 
-from wordytaire import score_move, tile_value, validate_and_score
+from wordytaire import score_move, score_submission, tile_value, validate_and_score
 
 
 def test_one_part():
@@ -216,3 +216,30 @@ def test_score_openers():
     assert(7 == downward_score)
     assert(7 == rightward_score)
     assert(9 == rightward_with_bonus_score)
+
+
+def test_score_submission():
+    illegal_fifth_word = [
+        '0 0 2 0 dog',
+        '3 -3 3 1 house',
+        '3 2 6 2 spun',
+        '0 1 0 3 oge',
+        '1 3 6 3 rudite',
+        '4 -3 5 -3 ex'
+    ]
+
+    fifth_removed = [
+        '0 0 2 0 dog',
+        '3 -3 3 1 house',
+        '3 2 6 2 spun',
+        '0 1 0 3 oge',
+        '4 -3 5 -3 ex'
+    ]
+
+    dictionary = {'dog', 'dogs', 'house', 'houses', 'spun', 'doge', 'erudite', 'hex'}
+
+    _, illegal_score = score_submission(dictionary, illegal_fifth_word)
+    _, legal_score = score_submission(dictionary, fifth_removed)
+
+    assert(-10 == illegal_score)
+    assert(129 == legal_score)
