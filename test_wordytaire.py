@@ -202,6 +202,17 @@ def test_tile_value():
 
 
 def test_score_openers():
-    opener0 = 
+    downward = '0 0 0 2 cat'
+    rightward = '-1 0 1 0 cat'
+    rightward_with_bonus = '0 0 2 0 cat'
 
-    connected_words = []
+    dictionary = {'cat'}
+    letters = Counter('cat')
+
+    _, downward_score, _ = validate_and_score(dictionary, {}, letters, downward.split())
+    _, rightward_score, _ = validate_and_score(dictionary, {}, letters, rightward.split())
+    _, rightward_with_bonus_score, _ = validate_and_score(dictionary, {}, letters, rightward_with_bonus.split())
+
+    assert(7 == downward_score)
+    assert(7 == rightward_score)
+    assert(9 == rightward_with_bonus_score)

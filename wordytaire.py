@@ -1,4 +1,5 @@
 from collections import Counter
+from functools import reduce
 
 import re
 
@@ -109,8 +110,22 @@ def get_connected_words(used, placement, x1, y1, x2, y2):
     return connected_words
 
 
+def score_placement(placement):
+    tilevals = sum(letvals[v] * tile_value(k)[0] for k,v in placement.items())
+    multi = reduce(lambda a,b: a*b, [tile_value(k)[1] for k in placement.keys()])
+
+    return tilevals * multi
+
+
+def score_connected_word(placement, word):
+    tilevals = sum(letvals[c[1]] * [tile_value(c[0])[0] if c[0] in placement else 1 for c in word])
+    multi = reduce(lambda a,b: a*b, [tile_value(c[0])[1] if c[0] in placement else 1 for c in word])
+
+    return tilevals * multi
+    
+
 def score_move(placement, connected_words):
-    pass
+    return score_placement(placement) + sum(score_connected_word(placement, word) for word in connected_words)
 
 
 def validate_and_score(dictionary, used, letters, parts):
