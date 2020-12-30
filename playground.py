@@ -1,9 +1,11 @@
 from collections import Counter
 
+dictionary = set()
 letcount = Counter()
 
 with open('words_alpha.txt') as f:
     for line in f.readlines():
+        dictionary.add(line.rstrip())
         for c in line.rstrip():
             letcount[c] += 1
 
@@ -105,3 +107,6 @@ def symb(val):
 
 for y in range(-15, 16):
     print(' '.join(symb(rules(x, y)) for x in range(-15, 16)))
+
+print(len(dictionary))
+print(len([w for w in dictionary if len(w) > 1]))

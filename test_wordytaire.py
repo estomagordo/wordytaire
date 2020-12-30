@@ -1,109 +1,126 @@
 from collections import Counter
 
-from wordytaire import score_move, score_submission, tile_value, validate_and_score
+from wordytaire import Wordytaire
+
+wt = Wordytaire({'cat', 'rub', 'rubber', 'dog', 'dogs', 'house', 'houses', 'spun', 'doge', 'erudite', 'hex'})
 
 
 def test_one_part():
     s = 'blacksmith'
-    _, score, _ = validate_and_score(set(), {}, Counter(), s.split())
+    _, score, _ = wt.validate_and_score({}, Counter(), s.split())
+
     assert(-1 == score)
 
 
 def test_two_parts():
     s = '5 blacksmith'
-    _, score, _ = validate_and_score(set(), {}, Counter(), s.split())
+    _, score, _ = wt.validate_and_score({}, Counter(), s.split())
+
     assert(-1 == score)
 
 def test_three_parts():
     s = '5 1 blacksmith'
-    _, score, _ = validate_and_score(set(), {}, Counter(), s.split())
+    _, score, _ = wt.validate_and_score({}, Counter(), s.split())
+
     assert(-1 == score)
 
 
 def test_four_parts():
     s = '4 2 5 blacksmith'
-    _, score, _ = validate_and_score(set(), {}, Counter(), s.split())
+    _, score, _ = wt.validate_and_score({}, Counter(), s.split())
+
     assert(-1 == score)
 
 
 def test_six_parts():
     s = 'blacksmith 5 5 3 4 3'
-    _, score, _ = validate_and_score(set(), {}, Counter(), s.split())
+    _, score, _ = wt.validate_and_score({}, Counter(), s.split())
+
     assert(-1 == score)
 
 
 def test_no_numbers():
     s = 'blacksmith one two thisisridiculous four'    
-    _, score, _ = validate_and_score(set(), {}, Counter(), s.split())
+    _, score, _ = wt.validate_and_score({}, Counter(), s.split())
 
     assert(-2 == score)
 
 
 def test_float():
     s = '1 2 3.5 5 blacksmith'    
-    _, score, _ = validate_and_score(set(), {}, Counter(), s.split())
-    assert(-2 == score)
+    _, score, _ = wt.validate_and_score({}, Counter(), s.split())
 
+    assert(-2 == score)
 
 
 def test_lone_minus():
     s = '1 2 - 5 blacksmith'    
-    _, score, _ = validate_and_score(set(), {}, Counter(), s.split())
+    _, score, _ = wt.validate_and_score({}, Counter(), s.split())
+
     assert(-2 == score)
 
 
 def test_upper():
     s = '0 0 0 0 abcDEF'  
-    _, score, _ = validate_and_score(set(), {}, Counter(), s.split())
+    _, score, _ = wt.validate_and_score({}, Counter(), s.split())
+
     assert(-3 == score)
 
 
 def test_hyphen():
     s = '1 2 5 5 hack-eyed'   
-    _, score, _ = validate_and_score(set(), {}, Counter(), s.split())
+    _, score, _ = wt.validate_and_score({}, Counter(), s.split())
+
     assert(-3 == score)
 
 
 def test_scandi():
     s = '82 5 28 1 smörgåsbord'  
-    _, score, _ = validate_and_score(set(), {}, Counter(), s.split())
+    _, score, _ = wt.validate_and_score({}, Counter(), s.split())
+
     assert(-3 == score)
 
 
 def test_point():
     s = '1 1 1 1 sausage'  
-    _, score, _ = validate_and_score(set(), {}, Counter(), s.split())
+    _, score, _ = wt.validate_and_score({}, Counter(), s.split())
+
     assert(-4 == score)
 
 
 def test_wrong_way():
     s = '1 1 1 -1 sausage'  
-    _, score, _ = validate_and_score(set(), {}, Counter(), s.split())
+    _, score, _ = wt.validate_and_score({}, Counter(), s.split())
+
     assert(-4 == score)
 
 
 def test_diagonal():
     s = '1 1 3 3 sausage'  
-    _, score, _ = validate_and_score(set(), {}, Counter(), s.split())
+    _, score, _ = wt.validate_and_score({}, Counter(), s.split())
+
     assert(-4 == score)
 
 
 def test_short_word():
     s = '1 1 1 3 up'  
-    _, score, _ = validate_and_score(set(), {}, Counter(), s.split())
+    _, score, _ = wt.validate_and_score({}, Counter(), s.split())
+
     assert(-5 == score)
 
 
 def test_long_word():
     s = '1 1 1 3 upend'  
-    _, score, _ = validate_and_score(set(), {}, Counter(), s.split())
+    _, score, _ = wt.validate_and_score({}, Counter(), s.split())
+
     assert(-5 == score)
 
 
 def test_missing_letters():
     s = '1 1 1 3 rub'
     letters = Counter('aaaaaaaaru') 
-    _, score, _ = validate_and_score(set(), {}, letters, s.split())
+    _, score, _ = wt.validate_and_score({}, letters, s.split())
+
     assert(-6 == score)
 
 
@@ -111,23 +128,24 @@ def test_overwriting():
     s = '1 1 1 3 rub'
     used = {(1, 1): 'z', (1, 2): 'y'}
     letters = Counter('burn')
-    _, score, _ = validate_and_score(set(), used, letters, s.split())
+    _, score, _ = wt.validate_and_score(used, letters, s.split())
+
     assert(-7 == score)
 
 
 def test_unknown_word():
     s = '1 1 1 9 degaullic'
-    dictionary = {'summer', 'pluto', 'aphrodisiac'}
     letters = Counter('degaullicandsuchwordsyouknow') 
-    _, score, _ = validate_and_score(dictionary, {}, letters, s.split())
+    _, score, _ =wt.validate_and_score({}, letters, s.split())
+
     assert(-8 == score)
 
 
 def test_false_start():
     s = '1 1 1 3 rub'
-    dictionary = {'rubber', 'rub'}
     letters = Counter('burn')
-    _, score, _ = validate_and_score(dictionary, {}, letters, s.split())
+    _, score, _ =wt.validate_and_score({}, letters, s.split())
+
     assert(-9 == score)
 
 
@@ -137,13 +155,12 @@ def test_make_illegal_words():
     s2 = '-5 0 -3 0 rub'
     s3 = '1 0 3 0 rub'
     
-    dictionary = {'rubber', 'rub'}
     used = {(-2, 0): 'r', (-1, 0): 'u', (0, 0): 'b'}
     letters = Counter('burn')
-    _, score0, _ = validate_and_score(dictionary, used, letters, s0.split())
-    _, score1, _ = validate_and_score(dictionary, used, letters, s1.split())
-    _, score2, _ = validate_and_score(dictionary, used, letters, s2.split())
-    _, score3, _ = validate_and_score(dictionary, used, letters, s3.split())
+    _, score0, _ =wt.validate_and_score(used, letters, s0.split())
+    _, score1, _ =wt.validate_and_score(used, letters, s1.split())
+    _, score2, _ =wt.validate_and_score(used, letters, s2.split())
+    _, score3, _ =wt.validate_and_score(used, letters, s3.split())
     
     assert(-10 == score0)
     assert(-10 == score1)
@@ -168,21 +185,21 @@ def test_tile_value():
     w3_0 = (3, 3)
     w3_1 = (-28, 33)
 
-    center_val = tile_value(center)
-    five_col0_val = tile_value(five_col0)
-    five_col1_val = tile_value(five_col1)
-    four_row0_val = tile_value(four_row0)
-    four_row1_val = tile_value(four_row1)
-    l2_0_val = tile_value(l2_0)
-    l2_1_val = tile_value(l2_1)
-    l2_2_val = tile_value(l2_2)
-    l3_0_val = tile_value(l3_0)
-    l3_1_val = tile_value(l3_1)
-    w2_0_val = tile_value(w2_0)
-    w2_1_val = tile_value(w2_1)
-    w2_2_val = tile_value(w2_2)
-    w3_0_val = tile_value(w3_0)
-    w3_1_val = tile_value(w3_1)
+    center_val = wt.tile_value(center)
+    five_col0_val = wt.tile_value(five_col0)
+    five_col1_val = wt.tile_value(five_col1)
+    four_row0_val = wt.tile_value(four_row0)
+    four_row1_val = wt.tile_value(four_row1)
+    l2_0_val = wt.tile_value(l2_0)
+    l2_1_val = wt.tile_value(l2_1)
+    l2_2_val = wt.tile_value(l2_2)
+    l3_0_val = wt.tile_value(l3_0)
+    l3_1_val = wt.tile_value(l3_1)
+    w2_0_val = wt.tile_value(w2_0)
+    w2_1_val = wt.tile_value(w2_1)
+    w2_2_val = wt.tile_value(w2_2)
+    w3_0_val = wt.tile_value(w3_0)
+    w3_1_val = wt.tile_value(w3_1)
 
     assert((1, 1) == center_val)
     assert((1, 1) == five_col0_val)
@@ -206,12 +223,11 @@ def test_score_openers():
     rightward = '-1 0 1 0 cat'
     rightward_with_bonus = '0 0 2 0 cat'
 
-    dictionary = {'cat'}
     letters = Counter('cat')
 
-    _, downward_score, _ = validate_and_score(dictionary, {}, letters, downward.split())
-    _, rightward_score, _ = validate_and_score(dictionary, {}, letters, rightward.split())
-    _, rightward_with_bonus_score, _ = validate_and_score(dictionary, {}, letters, rightward_with_bonus.split())
+    _, downward_score, _ =wt.validate_and_score({}, letters, downward.split())
+    _, rightward_score, _ =wt.validate_and_score({}, letters, rightward.split())
+    _, rightward_with_bonus_score, _ =wt.validate_and_score({}, letters, rightward_with_bonus.split())
 
     assert(7 == downward_score)
     assert(7 == rightward_score)
@@ -236,10 +252,8 @@ def test_score_submission():
         '4 -3 5 -3 ex'
     ]
 
-    dictionary = {'dog', 'dogs', 'house', 'houses', 'spun', 'doge', 'erudite', 'hex'}
-
     # _, illegal_score = score_submission(dictionary, illegal_fifth_word)
-    _, legal_score = score_submission(dictionary, fifth_removed)
+    _, legal_score = wt.score_submission(fifth_removed)
 
     # assert(-10 == illegal_score)
     assert(129 == legal_score)
