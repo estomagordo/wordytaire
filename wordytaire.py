@@ -124,8 +124,8 @@ def score_connected_word(placement, word):
     return tilevals * multi
     
 
-def score_move(placement, connected_words):
-    return score_placement(placement) + sum(score_connected_word(placement, word) for word in connected_words)
+def score_move(placement, connected_words, extension):
+    return (0 if extension else score_placement(placement)) + sum(score_connected_word(placement, word) for word in connected_words)
 
 
 def validate_and_score(dictionary, used, letters, parts):
@@ -158,19 +158,20 @@ def validate_and_score(dictionary, used, letters, parts):
     if any((p[0], p[1]) in used for p in placement):
         return (f'Error', -7, {})
 
-    if word not in dictionary:
+    connected_words = get_connected_words(used, placement, x1, y1, x2, y2)
+    extension = connected_words and sum(c[0] in placement for c in connected_words[0]) == len(word)
+
+    if word not in dictionary and not extension:
         return (f'Error', -8, {})
 
     if not used and not (0 in (x1, y1, x2, y2) or x1 < 0 < x2 or y1 < 0 < y2):
         return (f'Error', -9, {})
 
-    connected_words = get_connected_words(used, placement, x1, y1, x2, y2)
-
     for word in connected_words:
         if ''.join(c[1] for c in word) not in dictionary:
             return (f'Error', -10, {})
 
-    move_score = score_move(placement, connected_words)
+    move_score = score_move(placement, connected_words, extension)
 
     for k,v in placement.items():
         used[k] = v
