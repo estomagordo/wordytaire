@@ -31,7 +31,7 @@
         firebase.analytics();
     </script>
 
-    <h1>Datastore and Firebase Auth Example</h1>
+    <h1>Wordytaire</h1>
 
     <div id="firebaseui-auth-container"></div>
 
@@ -43,14 +43,17 @@
     <dl>
         <dt>Name</dt><dd>{{ user_data['name'] }}</dd>
         <dt>Email</dt><dd>{{ user_data['email'] }}</dd>
-        <dt>Last 10 visits</dt><dd>
-        {% for time in times %}
-            <p>{{ time['timestamp'] }}</p>
-        {% endfor %} </dd>
+        <dt>Score</dt><dd>{{score}}</dd>
     </dl>
     {% elif error_message %}
     <p>Error: {{ error_message }}</p>
     {% endif %}
+
+    <h2>Upload submission</h2>
+    <form method=post enctype=multipart/form-data>
+        <input type=file name=file>
+        <input type=submit value=Upload>
+    </form>
     </div>
 </body>
 </html>

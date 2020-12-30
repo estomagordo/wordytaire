@@ -1,16 +1,35 @@
 import datetime
 
-from flask import Flask, render_template, request
+from flask import Flask, flash, redirect, render_template, request
 from google.auth.transport import requests
 from google.cloud import datastore
+from wordytaire import Wordytaire
+
 import google.oauth2.id_token
 
 app = Flask(__name__)
 firebase_request_adapter = requests.Request()
+wt = Wordytaire()
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def root():
-    # Verify Firebase auth.
+    score = 0
+
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+
+        file = request.files['file']
+
+        if not file.filename:
+            flash('No selected file')
+            return redirect(request.url)
+
+        submission = file.readlines()
+        
+        score = wt.score_submission(submission)
+
     id_token = request.cookies.get("token")
     error_message = None
     claims = None
@@ -36,7 +55,7 @@ def root():
 
     return render_template(
         'index.html',
-        user_data=claims, error_message=error_message, times=times)
+        user_data=claims, error_message=error_message, score=score)
 
 datastore_client = datastore.Client()
 

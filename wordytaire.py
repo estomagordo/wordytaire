@@ -37,7 +37,8 @@ class Wordytaire:
         if dictionary:
             self.dictionary = dictionary
         else:
-            self.dictionary = {}
+            self.dictionary = set()
+            
             with open('words_alpha.txt') as f:
                 for line in f.readlines():
                     self.dictionary.add(line.rstrip())
