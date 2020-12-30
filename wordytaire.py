@@ -1,10 +1,15 @@
 from collections import Counter
 from functools import reduce
+from hashlib import sha256
 
 import re
 
 letvals = {'a': 1, 'b': 5, 'c': 4, 'd': 4, 'e': 1, 'f': 6, 'g': 5, 'h': 5, 'i': 1, 'j': 9, 'k': 7, 'l': 3, 'm': 4, 'n': 2, 'o': 2, 'p': 4, 'q': 9, 'r': 2, 's': 2, 't': 2, 'u': 4, 'v': 6, 'w': 7, 'x': 8, 'y': 5, 'z': 8}
 
+
+def hash_submission(submission):
+    return sha256('\n'.join(submission).encode('utf-8')).hexdigest()
+    
 
 def tile_value(tile):
     x, y = tile
