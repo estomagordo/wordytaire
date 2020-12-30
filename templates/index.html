@@ -1,18 +1,44 @@
 <!doctype html>
 <html>
 <head>
-  <title>Datastore and Firebase Auth Example</title>
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
-  <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Datastore and Firebase Auth Example</title>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://www.gstatic.com/firebasejs/ui/4.4.0/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.4.0/firebase-ui-auth.css" />
 </head>
 <body>
 
-  <h1>Datastore and Firebase Auth Example</h1>
+    <h1>Datastore and Firebase Auth Example</h1>
 
-  <h2>Last 10 visits</h2>
-  {% for time in times %}
+    <h2>Last 10 visits</h2>
+    {% for time in times %}
     <p>{{ time['timestamp'] }}</p>
-  {% endfor %}
+    {% endfor %}
 
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-analytics.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        var firebaseConfig = {
+            apiKey: "AIzaSyBKoruakcRqQhMP50WO1ro6bwdcMFg_3iY",
+            authDomain: "wordytaire.firebaseapp.com",
+            databaseURL: "https://wordytaire-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "wordytaire",
+            storageBucket: "wordytaire.appspot.com",
+            messagingSenderId: "1056878896581",
+            appId: "1:1056878896581:web:4bb05a362fe8d1dba2d7ac",
+            measurementId: "G-Q9CL0QPSYK"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+    </script>
 </body>
 </html>
