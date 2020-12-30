@@ -1,8 +1,10 @@
 import datetime
+from re import sub
 
 from flask import Flask, flash, redirect, render_template, request
 from google.auth.transport import requests
 from google.cloud import datastore
+from hashlib import sha256
 from wordytaire import Wordytaire
 
 import google.oauth2.id_token
@@ -11,29 +13,45 @@ app = Flask(__name__)
 firebase_request_adapter = requests.Request()
 wt = Wordytaire()
 
+
+def hash_submission(submission):
+    return sha256('\n'.join(submission).encode('utf-8')).hexdigest()
+
+
+@app.route('/upload_submission', methods=['POST'])
+def upload_submission():
+    score = 0
+    
+    if 'file' not in request.files:
+        flash('No file part')
+        return redirect(request.url)
+
+    file = request.files['file']
+
+    if not file.filename:
+        flash('No selected file')
+        return redirect(request.url)
+
+    submission = [line.decode('utf-8') for line in file.readlines()]
+    hash = hash_submission(submission)
+    
+    existing_score = fetch_score(hash)
+
+    if existing_score:
+        print('Known submission')
+        score = existing_score
+    else:
+        print('New submission')
+        score = wt.score_submission(submission)[1]
+        store_score(hash, score)
+
+
 @app.route('/', methods=['GET', 'POST'])
 def root():
-    score = 0
-
-    if request.method == 'POST':
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-
-        file = request.files['file']
-
-        if not file.filename:
-            flash('No selected file')
-            return redirect(request.url)
-
-        submission = [line.decode('UTF-8') for line in file.readlines()]
-        
-        score = wt.score_submission(submission)[1]
-
     id_token = request.cookies.get("token")
     error_message = None
     claims = None
-    times = None
+    score = 0
 
     if id_token:
         try:
@@ -45,37 +63,36 @@ def root():
             claims = google.oauth2.id_token.verify_firebase_token(
                 id_token, firebase_request_adapter)
 
-            store_time(claims['email'], datetime.datetime.now())
-            times = fetch_times(claims['email'], 10)
-
         except ValueError as exc:
             # This will be raised if the token is expired or any other
             # verification checks fail.
             error_message = str(exc)
-
+    
     return render_template(
         'index.html',
         user_data=claims, error_message=error_message, score=score)
 
 datastore_client = datastore.Client()
 
-def store_time(email, dt):
-    entity = datastore.Entity(key=datastore_client.key('User', email, 'visit'))
-    entity.update({
-        'timestamp': dt
-    })
 
-    datastore_client.put(entity)
+def fetch_score(hash):
+    key = datastore_client.key("Score", hash)
+    
+    score = datastore_client.get(key)
+
+    return score
 
 
-def fetch_times(email, limit):
-    ancestor = datastore_client.key('User', email)
-    query = datastore_client.query(kind='visit', ancestor=ancestor)
-    query.order = ['-timestamp']
+def store_score(hash, score):
+    key = datastore_client.key("Score", hash)
 
-    times = query.fetch(limit=limit)
+    score = datastore.Entity(key=key)
 
-    return times
+    score.update(
+        {
+            "score": score
+        }
+    )
 
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App

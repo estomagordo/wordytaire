@@ -54,3 +54,20 @@ window.addEventListener('load', function () {
       alert('Unable to log in: ' + error)
     });
   });
+
+  $(function() {
+    $('#upload-file-btn').click(function() {
+        var form_data = new FormData($('#upload-file')[0]);
+        $.ajax({
+            type: 'POST',
+            url: '/upload_submission',
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                console.log('Success!');
+            },
+        });
+    });
+});
