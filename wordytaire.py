@@ -1,5 +1,6 @@
 from collections import Counter
 from functools import reduce
+from hashlib import sha256
 
 import re
 
@@ -41,6 +42,9 @@ class Wordytaire:
             with open('words_alpha.txt') as f:
                 for line in f.readlines():
                     self.dictionary.add(line.rstrip())
+
+    def hash_submission(self, submission):
+        return sha256('\n'.join(submission).encode('utf-8')).hexdigest()
 
     def tile_value(self, tile):
         x, y = tile
