@@ -1,28 +1,22 @@
-from flask import Flask, request
-from wordytaire import Wordytaire
+from flask import escape
 
-app = Flask(__name__)
-wt = Wordytaire()
+def hello_http(request):
+    """HTTP Cloud Function.
+    Args:
+        request (flask.Request): The request object.
+        <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
+    Returns:
+        The response text, or any set of values that can be turned into a
+        Response object using `make_response`
+        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
+    """
+    request_json = request.get_json(silent=True)
+    request_args = request.args
 
-
-@app.route('/', methods=['POST'])
-def handle_submission():
-    score = 0
-    
-    if 'file' not in request.files:
-        return ('No payload', 400)
-
-    file = request.files['file']
-
-    if not file.filename:
-        return ('No filename', 400)
-        
-    submission = [line.decode('utf-8') for line in file.readlines()]
-    
-    score = wt.score_submission(submission)
-
-    return score   
-
-
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8080)
+    if request_json and 'name' in request_json:
+        name = request_json['name']
+    elif request_args and 'name' in request_args:
+        name = request_args['name']
+    else:
+        name = 'World'
+    return 'Hello {}!'.format(escape(name))
