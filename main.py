@@ -14,10 +14,9 @@ def handle_submission():
 
     file = request.files['file']
 
-    # if not file.filename:
-    #     flash('No selected file')
-    #     return redirect(request.url)
-
+    if not file.filename:
+        return ('No filename', 400)
+        
     submission = [line.decode('utf-8') for line in file.readlines()]
     
     score = wt.score_submission(submission)
